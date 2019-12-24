@@ -1,0 +1,3 @@
+[submodule "lib/mu-core"]
+	path = lib/mu-core
+	url = git@github.com:SpikE4343/mu-core.git
