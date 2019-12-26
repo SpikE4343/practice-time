@@ -48,7 +48,7 @@ void rxInit(RxControllerConfig_t *info)
       .duty_cycle_pos = 128, //50% duty cycle
       .mode = 0,
       .flags = SPI_DEVICE_TXBIT_LSBFIRST | SPI_DEVICE_3WIRE | SPI_DEVICE_HALFDUPLEX,
-      .spics_io_num = config->spiSelectPin,
+      .spics_io_num = 0,
       .cs_ena_posttrans = 1, //Keep the CS low 3 cycles after transaction, to stop slave from missing the last bit when CS has less propagation delay than CLK
       .queue_size = 1,
       //.post_cb=
@@ -56,7 +56,7 @@ void rxInit(RxControllerConfig_t *info)
 
   for (int i = 0; i < config->rxCount; ++i)
   {
-    devcfg.spics_io_num = config->spiSelectPin[i];
+    devcfg.spics_io_num = config->devices[i].spiSelectPin;
 
     ret = spi_bus_add_device(HSPI_HOST, &devcfg, &devHandle[i]);
     assert(ret == ESP_OK);
@@ -104,6 +104,7 @@ void rxSetState(uint8_t deviceId, uint8_t band, uint8_t channel)
   assert(deviceId >= (uint8_t)0);
   assert(deviceId < MAX_RX_COUNT);
   assert(deviceId < config->rxCount);
+
 
   int index = (channel - 1) + (8 * band);
   uint16_t freq = channelFreqTable[index];

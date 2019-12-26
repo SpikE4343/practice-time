@@ -367,40 +367,49 @@ void lapTimerDisplayTask(void *arg)
 
     RssiReading_t *rssi_readings = rssiReadings();
 
-    int percent = (int)((rssi_readings->filtered) * DISPLAY_WIDTH);
-
-    for (int x = 0; x < percent; ++x)
+    int s = 0;
+    int x = 10;
+    for(int r=0; r < config->rssiReader.channelCount; ++r)
     {
-      displayDraw(x, y, 1);
-      displayDraw(x, y + 1, 1);
+
+      int percent = (int)((rssi_readings[r].filtered) * 50);
+
+      for (int p = 0; p < percent; ++p)
+      {
+        for(int h=0; h < 5; ++h)
+        {
+          displayDraw(x+p, s + h, 1);
+        }
+      }
+
+      PilotConfig_t *pilot = &config->pilots[r];
+      PilotLapData_t *lapData = &allPilotLapData[r];
+
+      sprintf(
+          buf, "%c%u",
+          rxGetBandShortName(pilot->band),
+          pilot->channel);
+      displayDrawString(0, s, buf); 
+
+      s += 12;
+
+      // sprintf(
+      //     buf, "%c%u:%d:%.2f",
+      //     rxGetBandShortName(pilot->band),
+      //     pilot->channel,
+      //     rxGetFrequency(pilot->band, pilot->channel),
+      //     (now - lapData->timestamps[lapData->timesCount - 1]) / 1000.0f);
+      // displayDrawString(8, s, buf); 
+
+      // if (lapData->timesCount > 1)
+      // {
+      //   s += 10;
+      //   int lapCount = lapData->timesCount - 1;
+      //   int lapTime = lapData->times[lapData->timesCount - 2];
+      //   sprintf(buf, "%d:%0.2f", lapCount, lapTime / 1000.0f);
+      //   displayDrawString(1, s, buf); 
+      // }
     }
-
-    
-    sprintf(buf, "%d", (int)(rssi_readings->filtered * 10));
-    displayDrawString(1, 17, buf); 
-
-    PilotConfig_t *pilot = &config->pilots[0];
-    PilotLapData_t *lapData = &allPilotLapData[0];
-
-    sprintf(
-        buf, "%c%u:%d:%.2f",
-        rxGetBandShortName(pilot->band),
-        pilot->channel,
-        rxGetFrequency(pilot->band, pilot->channel),
-        (now - lapData->timestamps[lapData->timesCount - 1]) / 1000.0f);
-    displayDrawString(8, 17, buf); 
-
-    if (lapData->timesCount > 1)
-    {
-      int lapCount = lapData->timesCount - 1;
-      int lapTime = lapData->times[lapData->timesCount - 2];
-      sprintf(buf, "%d:%0.2f", lapCount, lapTime / 1000.0f);
-      displayDrawString(1, 27, buf); 
-    }
-
-
-    sprintf(buf, "%u", (int)rssi_readings->raw);
-    displayDrawString(1, 37, buf); 
 
     displayUpdate();
 

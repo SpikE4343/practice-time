@@ -14,13 +14,18 @@
 
 #define MAX_RX_COUNT 8
 
+typedef struct 
+{
+  uint8_t spiSelectPin;
+} RxDeviceConfig_t;
+
 typedef struct
 {
   uint8_t spiOutputPin;
   uint8_t spiClockPin;
   uint32_t spiClockSpeed;
   uint8_t rxCount;
-  uint8_t spiSelectPin[MAX_RX_COUNT];
+  RxDeviceConfig_t devices[MAX_RX_COUNT];
 } RxControllerConfig_t;
 
 void rxInit(RxControllerConfig_t *info);

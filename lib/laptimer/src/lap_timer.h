@@ -6,7 +6,6 @@
 #include "driver/adc.h"
 #include "rssi_reader.h"
 #include "rx_controller.h"
-#include "chorus_controller.h"
 
 #define MAX_LAPS 32
 

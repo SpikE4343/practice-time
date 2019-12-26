@@ -22,6 +22,7 @@ typedef struct
   uint8_t channelCount;
   uint16_t lpfCutoffHz;
   uint16_t lpf2CutoffHz;
+  uint16_t calibrationSec;
   uint8_t channels[MAX_RSSI_CHANNEL_COUNT];
 } RssiReaderConfig_t;
 
@@ -32,6 +33,7 @@ typedef struct
   float filtered;
   uint32_t sampleCount;
   uint32_t timestamp;
+  uint16_t bias;
 } RssiReading_t;
 
 void rssiConfigPrint(RssiReaderConfig_t *config);
